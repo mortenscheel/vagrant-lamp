@@ -1,7 +1,7 @@
 #!/bin/bash
 
 apache_config_file="/etc/apache2/envvars"
-apache_vhost_file="/etc/apache2/sites-available/vagrant_vhost.conf"
+apache_vhost_file="/etc/apache2/sites-available/vagrant_vhosts.conf"
 php_config_file="/etc/php5/apache2/php.ini"
 xdebug_config_file="/etc/php5/mods-available/xdebug.ini"
 mysql_config_file="/etc/mysql/my.cnf"
@@ -56,14 +56,27 @@ apache_go() {
 	if [ ! -f "${apache_vhost_file}" ]; then
 		cat << EOF > ${apache_vhost_file}
 <VirtualHost *:80>
-    ServerAdmin webmaster@localhost
-    DocumentRoot /vagrant/src
+    ServerName partner.findforsikring.dev
+    DocumentRoot /code/Findforsikring-CRM
+    LogLevel debug
+
+    ErrorLog /var/log/apache2/ffcrm-error.log
+    CustomLog /var/log/apache2/ffcrm-access.log combined
+
+    <Directory /code>
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
+<VirtualHost *:80>
+    ServerName local.dev
+    DocumentRoot /code/local.dev/public
     LogLevel debug
 
     ErrorLog /var/log/apache2/error.log
     CustomLog /var/log/apache2/access.log combined
 
-    <Directory /vagrant/src>
+    <Directory /code>
         AllowOverride All
         Require all granted
     </Directory>
@@ -72,7 +85,7 @@ EOF
 	fi
 
 	a2dissite 000-default
-	a2ensite vagrant_vhost
+	a2ensite vagrant_vhosts
 
 	a2enmod rewrite
 
