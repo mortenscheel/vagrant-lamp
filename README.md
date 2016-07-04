@@ -21,14 +21,10 @@ Usage
 -----
 
 ### Startup
+	$ git clone http://www.github.com/mattandersen/vagrant-lamp
+	$ cd vagrant-lamp
+	$ vagrant up
 
-1. Download one of the releases available [https://github.com/mattandersen/vagrant-lamp/releases](https://github.com/mattandersen/vagrant-lamp/releases)
-2. Extract the ZIP file.
-3. From the command-line:
-```
-$ cd vagrant-lamp-release
-$ vagrant up
-```
 That is pretty simple.
 
 ### Connecting
@@ -45,8 +41,8 @@ Technical Details
 -----------------
 * Ubuntu 14.04 64-bit
 * Apache 2.4
-* PHP 5.5
-* MySQL 5.5
+* PHP 5.6
+* MySQL 5.6
 * XDebug
 * PHPUnit 4.8
 * Composer
@@ -58,6 +54,5 @@ for each account on your host computer.
 The web root is located in the project directory at `src/` and you can install your files there
 
 And like any other vagrant file you have SSH access with
-```
-$ vagrant ssh
-```
+
+	$ vagrant ssh

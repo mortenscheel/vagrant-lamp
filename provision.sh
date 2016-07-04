@@ -6,7 +6,6 @@ php_config_file="/etc/php5/apache2/php.ini"
 xdebug_config_file="/etc/php5/mods-available/xdebug.ini"
 mysql_config_file="/etc/mysql/my.cnf"
 default_apache_index="/var/www/html/index.html"
-project_web_root="src"
 
 # This function is called at the very bottom of the file
 main() {
@@ -21,7 +20,9 @@ main() {
 }
 
 repositories_go() {
-	echo "NOOP"
+	if [ ! -f "/etc/apt/sources.list.d/ondrej-php5-5_6-trusty.list" ]; then
+		add-apt-repository -y ppa:ondrej/php5-5.6
+	fi
 }
 
 update_go() {
@@ -56,13 +57,13 @@ apache_go() {
 		cat << EOF > ${apache_vhost_file}
 <VirtualHost *:80>
     ServerAdmin webmaster@localhost
-    DocumentRoot /vagrant/${project_web_root}
+    DocumentRoot /vagrant/src
     LogLevel debug
 
     ErrorLog /var/log/apache2/error.log
     CustomLog /var/log/apache2/access.log combined
 
-    <Directory /vagrant/${project_web_root}>
+    <Directory /vagrant/src>
         AllowOverride All
         Require all granted
     </Directory>
@@ -112,9 +113,9 @@ EOF
 
 mysql_go() {
 	# Install MySQL
-	echo "mysql-server mysql-server/root_password password root" | debconf-set-selections
-	echo "mysql-server mysql-server/root_password_again password root" | debconf-set-selections
-	apt-get -y install mysql-client mysql-server
+	echo "mysql-server-5.6 mysql-server/root_password password root" | debconf-set-selections
+	echo "mysql-server-5.6 mysql-server/root_password_again password root" | debconf-set-selections
+	apt-get -y install mysql-common-5.6 mysql-client-5.6 mysql-server-5.6
 
 	sed -i "s/bind-address\s*=\s*127.0.0.1/bind-address = 0.0.0.0/" ${mysql_config_file}
 
