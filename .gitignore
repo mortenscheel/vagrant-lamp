@@ -4,4 +4,4 @@
 .vagrant
 *~
 .bundle
-.ideo/*
+.idea/*
